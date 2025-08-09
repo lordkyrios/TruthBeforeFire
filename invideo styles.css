@@ -1,0 +1,364 @@
+/* Main Styles for InVideo Website */
+
+:root {
+    --primary-color: #5046e5;
+    --secondary-color: #ff4d8d;
+    --dark-color: #080a0c;
+    --light-color: #ffffff;
+    --grey-color: #f5f5f5;
+    --text-color: #333333;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-color);
+}
+
+.iv-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Grid System */
+.iv-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.iv-grid-cols-12 {
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.iv-grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.iv-col-span-12 {
+    grid-column: span 12;
+}
+
+.iv-col-span-1 {
+    grid-column: span 1;
+}
+
+@media (max-width: 768px) {
+    .iv-grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .iv-col-span-1 {
+        grid-column: span 12;
+    }
+}
+
+/* Flex Utilities */
+.iv-flex {
+    display: flex;
+    align-items: center;
+}
+
+.iv-flex-grow {
+    flex-grow: 1;
+}
+
+.iv-self-center {
+    align-self: center;
+}
+
+.iv-align-middle {
+    vertical-align: middle;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    margin-top: 3rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* Header */
+header {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--grey-color);
+    margin-bottom: 40px;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    justify-content: flex-end;
+}
+
+header nav ul li a {
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+header nav ul li a:hover {
+    color: var(--primary-color);
+}
+
+/* Sections */
+section {
+    padding: 60px 0;
+}
+
+#hero {
+    text-align: center;
+    padding: 80px 0;
+}
+
+#hero h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+#hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+/* Features Section */
+#features .iv-grid {
+    margin-top: 40px;
+}
+
+#features .iv-col-span-1 {
+    background-color: var(--grey-color);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+#features .iv-col-span-1:hover {
+    transform: translateY(-10px);
+}
+
+/* How It Works Section */
+#how-it-works ol {
+    max-width: 600px;
+    margin: 0 auto;
+    padding-left: 20px;
+}
+
+#how-it-works li {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+/* Pricing Section */
+#pricing .iv-grid {
+    margin-top: 40px;
+}
+
+#pricing .iv-col-span-1 {
+    border: 1px solid var(--grey-color);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#pricing .iv-col-span-1:nth-child(2) {
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+/* Contact Section */
+#contact form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.iv-form-group {
+    margin-bottom: 20px;
+}
+
+.iv-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.iv-form-group input,
+.iv-form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: var(--font-family);
+}
+
+.iv-form-group textarea {
+    height: 150px;
+}
+
+/* Buttons */
+.iv-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--grey-color);
+    color: var(--dark-color);
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.iv-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.iv-btn-primary {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+}
+
+.iv-btn-primary:hover {
+    background-color: #4038c2;
+    color: var(--light-color);
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    padding: 60px 0;
+    margin-top: 60px;
+}
+
+footer .iv-flex {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+footer h4 {
+    color: var(--light-color);
+    margin-bottom: 20px;
+}
+
+footer ul {
+    list-style: none;
+}
+
+footer ul li {
+    margin-bottom: 10px;
+}
+
+footer ul li a {
+    color: #aaa;
+}
+
+footer ul li a:hover {
+    color: var(--light-color);
+}
+
+/* Animation Effects */
+section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Form Validation Styles */
+.iv-form-group input.error,
+.iv-form-group textarea.error {
+    border-color: #ff3860;
+}
+
+.error-message {
+    color: #ff3860;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.success-message {
+    background-color: #f0fff4;
+    border: 1px solid #68d391;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.success-message h3 {
+    color: #38a169;
+    margin-bottom: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    header nav ul {
+        gap: 15px;
+    }
+    
+    footer .iv-flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    #pricing .iv-col-span-1:nth-child(2) {
+        transform: none;
+    }
+}
