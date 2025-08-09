@@ -56,10 +56,19 @@
             padding: 2rem 20px;
         }
         
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
         h1 {
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 2rem;
         }
         
         .features {
@@ -79,6 +88,7 @@
         .feature h3 {
             color: var(--primary-color);
             margin-bottom: 1rem;
+            text-align: left;
         }
         
         .cta {
@@ -95,10 +105,18 @@
             text-decoration: none;
             font-weight: 600;
             transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
         
         .btn:hover {
             background-color: #3c34c5;
+        }
+
+        .btn:disabled {
+            background-color: #a8a8a8;
+            cursor: not-allowed;
         }
         
         footer {
@@ -107,6 +125,114 @@
             text-align: center;
             padding: 1.5rem;
             margin-top: 3rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group-half {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Video Preview */
+        .video-preview {
+            margin-top: 2rem;
+            background-color: #f5f5f5;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .processing-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .video-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .video-placeholder {
+            background-color: #333;
+            color: white;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .video-placeholder-icon {
+            font-size: 3rem;
+            margin-top: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #e53935;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -138,13 +264,321 @@
             </div>
         </div>
         
-        <div class="cta">
-            <a href="#" class="btn">Create Video Now</a>
+        <h2>Create Your Video</h2>
+        <div class="form-container">
+            <form id="video-generator-form">
+                <div class="form-group">
+                    <label for="text-input">Your Text Content</label>
+                    <textarea id="text-input" name="text-input" rows="10" placeholder="Paste your verses, chapters, or book text here..." required></textarea>
+                    <div id="text-input-error" class="error-message hidden"></div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group form-group-half">
+                        <label for="voice-gender">Voice Gender</label>
+                        <select id="voice-gender" name="voice-gender" required>
+                            <option value="">Select Voice Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        <div id="voice-gender-error" class="error-message hidden"></div>
+                    </div>
+                    
+                    <div class="form-group form-group-half">
+                        <label for="voice-language">Voice Language</label>
+                        <select id="voice-language" name="voice-language" required>
+                            <option value="">Loading...</option>
+                        </select>
+                        <div id="voice-language-error" class="error-message hidden"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image-style">Image Style</label>
+                    <select id="image-style" name="image-style" required>
+                        <option value="">Select Image Style</option>
+                        <option value="realistic">Realistic</option>
+                        <option value="artistic">Artistic</option>
+                        <option value="cartoon">Cartoon</option>
+                        <option value="abstract">Abstract</option>
+                        <option value="historical">Historical</option>
+                    </select>
+                    <div id="image-style-error" class="error-message hidden"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bg-music">Background Music</label>
+                    <select id="bg-music" name="bg-music">
+                        <option value="">None</option>
+                        <option value="inspirational">Inspirational</option>
+                        <option value="peaceful">Peaceful</option>
+                        <option value="dramatic">Dramatic</option>
+                        <option value="joyful">Joyful</option>
+                        <option value="reflective">Reflective</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" id="generate-video-btn" class="btn">Generate Video</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="processing-indicator" class="video-preview hidden">
+            <div class="processing-message">
+                <div class="spinner"></div>
+                <p id="processing-text">Processing your video...</p>
+            </div>
+        </div>
+
+        <div id="video-preview" class="video-preview hidden">
+            <!-- Video will be displayed here -->
+        </div>
+
+        <div id="video-controls" class="video-controls hidden">
+            <button id="download-video" class="btn">Download MP4</button>
+            <button id="export-youtube" class="btn">Export to YouTube</button>
         </div>
     </div>
     
     <footer>
         &copy; 2025 FaithBeforeFire. All rights reserved.
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the website
+            initWebsite();
+        });
+
+        function initWebsite() {
+            // Initialize video generator form
+            initVideoGeneratorForm();
+            
+            // Load voice options
+            loadVoiceOptions();
+            
+            console.log('Text to Video Generator initialized successfully!');
+        }
+
+        // Load voice options
+        function loadVoiceOptions() {
+            const voiceGenderSelect = document.getElementById('voice-gender');
+            const voiceLanguageSelect = document.getElementById('voice-language');
+            
+            if (!voiceGenderSelect || !voiceLanguageSelect) return;
+            
+            // Set default options while loading
+            voiceLanguageSelect.innerHTML = '<option value="">Loading...</option>';
+            
+            // Mock voice options data (since we can't call the API in static deployment)
+            const data = {
+                male: [
+                    { id: 'en-US-male-1', name: 'English (US) - Male 1', language: 'english' },
+                    { id: 'en-GB-male-1', name: 'English (UK) - Male 1', language: 'english' },
+                    { id: 'es-ES-male-1', name: 'Spanish - Male 1', language: 'spanish' },
+                    { id: 'fr-FR-male-1', name: 'French - Male 1', language: 'french' },
+                    { id: 'de-DE-male-1', name: 'German - Male 1', language: 'german' }
+                ],
+                female: [
+                    { id: 'en-US-female-1', name: 'English (US) - Female 1', language: 'english' },
+                    { id: 'en-GB-female-1', name: 'English (UK) - Female 1', language: 'english' },
+                    { id: 'es-ES-female-1', name: 'Spanish - Female 1', language: 'spanish' },
+                    { id: 'fr-FR-female-1', name: 'French - Female 1', language: 'french' },
+                    { id: 'de-DE-female-1', name: 'German - Female 1', language: 'german' }
+                ]
+            };
+            
+            // Populate language dropdown based on selected gender
+            voiceGenderSelect.addEventListener('change', function() {
+                const gender = this.value;
+                updateLanguageOptions(data, gender, voiceLanguageSelect);
+            });
+            
+            // Initial population
+            const initialGender = voiceGenderSelect.value;
+            if (initialGender) {
+                updateLanguageOptions(data, initialGender, voiceLanguageSelect);
+            } else {
+                voiceLanguageSelect.innerHTML = '<option value="">Select Gender First</option>';
+            }
+        }
+
+        // Update language options based on selected gender
+        function updateLanguageOptions(data, gender, selectElement) {
+            if (!data || !data[gender] || !selectElement) return;
+            
+            // Get unique languages
+            const languages = [...new Set(data[gender].map(voice => voice.language))];
+            
+            // Create options
+            selectElement.innerHTML = '';
+            languages.forEach(language => {
+                const option = document.createElement('option');
+                option.value = language;
+                option.textContent = language.charAt(0).toUpperCase() + language.slice(1);
+                selectElement.appendChild(option);
+            });
+        }
+
+        // Initialize video generator form
+        function initVideoGeneratorForm() {
+            const form = document.getElementById('video-generator-form');
+            if (!form) return;
+            
+            const textInput = document.getElementById('text-input');
+            const voiceGender = document.getElementById('voice-gender');
+            const voiceLanguage = document.getElementById('voice-language');
+            const imageStyle = document.getElementById('image-style');
+            const bgMusic = document.getElementById('bg-music');
+            const generateBtn = document.getElementById('generate-video-btn');
+            const processingIndicator = document.getElementById('processing-indicator');
+            const videoPreview = document.getElementById('video-preview');
+            const videoControls = document.getElementById('video-controls');
+            const downloadBtn = document.getElementById('download-video');
+            const youtubeBtn = document.getElementById('export-youtube');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                let isValid = true;
+                
+                // Validate text input
+                if (!textInput.value.trim()) {
+                    showError(textInput, 'Please enter text content');
+                    isValid = false;
+                } else {
+                    clearError(textInput);
+                }
+                
+                // Validate voice gender
+                if (!voiceGender.value) {
+                    showError(voiceGender, 'Please select voice gender');
+                    isValid = false;
+                } else {
+                    clearError(voiceGender);
+                }
+                
+                // Validate voice language
+                if (!voiceLanguage.value) {
+                    showError(voiceLanguage, 'Please select voice language');
+                    isValid = false;
+                } else {
+                    clearError(voiceLanguage);
+                }
+                
+                // Validate image style
+                if (!imageStyle.value) {
+                    showError(imageStyle, 'Please select image style');
+                    isValid = false;
+                } else {
+                    clearError(imageStyle);
+                }
+                
+                if (isValid) {
+                    // Show processing indicator
+                    processingIndicator.classList.remove('hidden');
+                    generateBtn.disabled = true;
+                    
+                    // Prepare data for API call
+                    const formData = {
+                        text: textInput.value.trim(),
+                        voiceGender: voiceGender.value,
+                        voiceLanguage: voiceLanguage.value,
+                        imageStyle: imageStyle.value,
+                        bgMusic: bgMusic.value
+                    };
+                    
+                    // Simulate video generation (since we can't call the API in static deployment)
+                    simulateVideoGeneration(videoPreview, videoControls, processingIndicator, generateBtn);
+                }
+            });
+            
+            // Handle download button
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function() {
+                    // In a real application, this would download the actual video
+                    // For this demo, we'll create a dummy download link
+                    alert('In a real application, this would download your generated video as an MP4 file.');
+                });
+            }
+            
+            // Handle YouTube export button
+            if (youtubeBtn) {
+                youtubeBtn.addEventListener('click', function() {
+                    // In a real application, this would integrate with YouTube API
+                    // For this demo, we'll just show a message
+                    alert('In a real application, this would upload the video to YouTube.');
+                });
+            }
+        }
+
+        // Show error message
+        function showError(input, message) {
+            const errorElement = document.getElementById(input.id + '-error');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+            input.style.borderColor = '#e53935';
+        }
+
+        // Clear error message
+        function clearError(input) {
+            const errorElement = document.getElementById(input.id + '-error');
+            if (errorElement) {
+                errorElement.textContent = '';
+                errorElement.classList.add('hidden');
+            }
+            input.style.borderColor = '#ddd';
+        }
+
+        // Simulate video generation (for demo purposes)
+        function simulateVideoGeneration(videoElement, controlsElement, processingIndicator, generateBtn) {
+            if (!videoElement || !controlsElement || !processingIndicator) return;
+            
+            // Show progress updates
+            const progressSteps = [
+                'Analyzing text...',
+                'Generating images...',
+                'Creating voiceover...',
+                'Synchronizing audio and images...',
+                'Finalizing video...',
+                'Video ready!'
+            ];
+            
+            const processingText = document.getElementById('processing-text');
+            if (!processingText) return;
+            
+            let step = 0;
+            const interval = setInterval(() => {
+                processingText.textContent = progressSteps[step];
+                step++;
+                
+                if (step >= progressSteps.length) {
+                    clearInterval(interval);
+                    
+                    // Hide processing indicator
+                    processingIndicator.classList.add('hidden');
+                    
+                    // Show dummy video
+                    videoElement.classList.remove('hidden');
+                    videoElement.innerHTML = `
+                        <div class="video-placeholder">
+                            <div class="video-placeholder-text">Video Preview</div>
+                            <div class="video-placeholder-icon">▶</div>
+                        </div>
+                    `;
+                    
+                    // Show controls
+                    controlsElement.classList.remove('hidden');
+                    
+                    // Re-enable generate button
+                    generateBtn.disabled = false;
+                }
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
