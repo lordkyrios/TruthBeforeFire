@@ -1,659 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaithBeforeFire - Text to Video Generator</title>
-    <style>
-        :root {
-            --primary-color: #5046e5;
-            --secondary-color: #ff4d8d;
-            --dark-color: #080a0c;
-            --light-color: #ffffff;
-            --text-color: #333333;
-            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: var(--font-family);
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--light-color);
-        }
-        
-        .bible-verse-header {
-            background-color: var(--dark-color);
-            color: var(--light-color);
-            text-align: center;
-            padding: 1.5rem 1rem;
-            width: 100%;
-            border-bottom: 3px solid var(--primary-color);
-        }
-        
-        .bible-verse-header p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-        
-        .bible-verse-header .verse-commentary {
-            font-weight: 700;
-            margin-top: 0.5rem;
-            color: var(--secondary-color);
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 20px;
-        }
-        
-        h1, h2, h3 {
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        h2 {
-            font-size: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .feature {
-            background-color: #f5f5f5;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .feature h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            text-align: left;
-        }
-        
-        .cta {
-            text-align: center;
-            margin: 3rem 0;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .btn:hover {
-            background-color: #3c34c5;
-        }
-
-        .btn:disabled {
-            background-color: #a8a8a8;
-            cursor: not-allowed;
-        }
-        
-        footer {
-            background-color: var(--dark-color);
-            color: var(--light-color);
-            text-align: center;
-            padding: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        /* Form Styles */
-        .form-container {
-            background-color: #f9f9f9;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin: 2rem 0;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group-half {
-            flex: 1;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 1rem;
-        }
-
-        textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        /* Video Preview */
-        .video-preview {
-            margin-top: 2rem;
-            background-color: #f5f5f5;
-            padding: 2rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .processing-message {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .video-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .video-placeholder {
-            background-color: #333;
-            color: white;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-        }
-
-        .video-placeholder-icon {
-            font-size: 3rem;
-            margin-top: 1rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .error-message {
-            color: #e53935;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .video-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cinema Pro Ultra — AutoStock Offline + ZIP Pack</title>
+<style>
+:root{--primary-color:#4b42ff;--dark-color:#0b1220;--ink:#1a1a1a}
+*{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--ink);background:#fff}
+.container{max-width:1180px;margin:0 auto;padding:2rem 20px}
+.form-container{background:#f9f9f9;padding:2rem;border-radius:8px;margin:1rem 0}
+.form-row{display:flex;gap:1rem;margin-bottom:1.2rem}.form-group{margin-bottom:1.2rem}.form-group-half{flex:1}
+.btn{background:var(--primary-color);color:#fff;padding:.8rem 1rem;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.stack{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.tag{font-size:.85rem;padding:.25rem .6rem;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #e0e7ff}
+.stage{position:relative;background:#0b1324;border:1px solid #e6e8ff;border-radius:12px;display:flex;align-items:center;justify-content:center;min-height:420px;overflow:hidden}
+canvas{max-width:100%;aspect-ratio:16/9;background:#0b1324;border-radius:12px}
+</style>
 </head>
 <body>
-    <!-- Bible Verse Header -->
-    <div class="bible-verse-header">
-        <p>"To him that overcometh will I grant to sit with me in my throne, even as I also overcame, and am set down with my Father in his throne." - Revelation 3:21 KJV</p>
-        <p class="verse-commentary">Jesus is God because ONLY God has a THRONE in Heaven.</p>
+<section class="container"><h1>Studio</h1></section>
+<section class="container">
+  <div class="form-container">
+    <div class="form-row">
+      <div class="form-group form-group-half">
+        <label>Stock Pack — Folder</label><input id="packInput" type="file" webkitdirectory directory multiple />
+      </div>
+      <div class="form-group form-group-half">
+        <label>Stock Pack — ZIP</label><input id="zipInput" type="file" accept=".zip" />
+      </div>
     </div>
-    
-    <!-- Main Content -->
-    <div class="container">
-        <h1>FaithBeforeFire - Text to Video Generator</h1>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>Text-Based Image Generation</h3>
-                <p>Our AI creates relevant images based on your verses or chapters.</p>
-            </div>
-            
-            <div class="feature">
-                <h3>Multilingual Voiceovers</h3>
-                <p>Choose from male or female voices in multiple languages.</p>
-            </div>
-            
-            <div class="feature">
-                <h3>YouTube-Ready Export</h3>
-                <p>Export your videos directly to YouTube in MP4 format.</p>
-            </div>
-        </div>
-        
-        <h2>Create Your Video</h2>
-        <div class="form-container">
-            <form id="video-generator-form">
-                <div class="form-group">
-                    <label for="text-input">Your Text Content</label>
-                    <textarea id="text-input" name="text-input" rows="10" placeholder="Paste your verses, chapters, or book text here..." required></textarea>
-                    <div id="text-input-error" class="error-message hidden"></div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group form-group-half">
-                        <label for="voice-gender">Voice Gender</label>
-                        <select id="voice-gender" name="voice-gender" required>
-                            <option value="">Select Voice Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                        <div id="voice-gender-error" class="error-message hidden"></div>
-                    </div>
-                    
-                    <div class="form-group form-group-half">
-                        <label for="voice-language">Voice Language</label>
-                        <select id="voice-language" name="voice-language" required>
-                            <option value="">Loading...</option>
-                        </select>
-                        <div id="voice-language-error" class="error-message hidden"></div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="image-style">Image Style</label>
-                    <select id="image-style" name="image-style" required>
-                        <option value="">Select Image Style</option>
-                        <option value="realistic">Realistic</option>
-                        <option value="artistic">Artistic</option>
-                        <option value="cartoon">Cartoon</option>
-                        <option value="abstract">Abstract</option>
-                        <option value="historical">Historical</option>
-                    </select>
-                    <div id="image-style-error" class="error-message hidden"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="bg-music">Background Music</label>
-                    <select id="bg-music" name="bg-music">
-                        <option value="">None</option>
-                        <option value="inspirational">Inspirational</option>
-                        <option value="peaceful">Peaceful</option>
-                        <option value="dramatic">Dramatic</option>
-                        <option value="joyful">Joyful</option>
-                        <option value="reflective">Reflective</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" id="generate-video-btn" class="btn">Generate Video</button>
-                </div>
-            </form>
-        </div>
-
-        <div id="processing-indicator" class="video-preview hidden">
-            <div class="processing-message">
-                <div class="spinner"></div>
-                <p id="processing-text">Processing your video...</p>
-            </div>
-        </div>
-
-        <div id="video-preview" class="video-preview hidden">
-            <!-- Video will be displayed here -->
-        </div>
-
-        <div id="video-controls" class="video-controls hidden">
-            <button id="download-video" class="btn">Download MP4</button>
-            <button id="export-youtube" class="btn">Export to YouTube</button>
-        </div>
+    <div class="stack">
+      <button class="btn" id="indexPack">Index Folder</button>
+      <button class="btn" id="importZip">Import ZIP</button>
+      <button class="btn" id="exportZip">Export ZIP</button>
+      <span class="tag" id="packStats">No pack indexed</span>
     </div>
-    
-    <footer>
-        &copy; 2025 FaithBeforeFire. All rights reserved.
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the website
-            initWebsite();
-        });
-
-        function initWebsite() {
-            // Initialize video generator form
-            initVideoGeneratorForm();
-            
-            // Load voice options
-            loadVoiceOptions();
-            
-            console.log('Text to Video Generator initialized successfully!');
-        }
-
-        // Load voice options from API
-        function loadVoiceOptions() {
-            const voiceGenderSelect = document.getElementById('voice-gender');
-            const voiceLanguageSelect = document.getElementById('voice-language');
-            
-            if (!voiceGenderSelect || !voiceLanguageSelect) return;
-            
-            // Set default options while loading
-            voiceLanguageSelect.innerHTML = '<option value="">Loading...</option>';
-            
-            // Populate language dropdown based on selected gender
-            voiceGenderSelect.addEventListener('change', function() {
-                const gender = this.value;
-                if (!gender) {
-                    voiceLanguageSelect.innerHTML = '<option value="">Select Gender First</option>';
-                    return;
-                }
-                
-                // Fetch voice options from API
-                fetch('/api/voice-options')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        updateLanguageOptions(data, gender, voiceLanguageSelect);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching voice options:', error);
-                        voiceLanguageSelect.innerHTML = '<option value="">Error loading options</option>';
-                    });
-            });
-            
-            // Initial population if gender is already selected
-            const initialGender = voiceGenderSelect.value;
-            if (initialGender) {
-                // Trigger the change event to load options
-                voiceGenderSelect.dispatchEvent(new Event('change'));
-            } else {
-                voiceLanguageSelect.innerHTML = '<option value="">Select Gender First</option>';
-            }
-        }
-
-        // Update language options based on selected gender
-        function updateLanguageOptions(data, gender, selectElement) {
-            if (!data || !data[gender] || !selectElement) return;
-            
-            // Get unique languages
-            const languages = [...new Set(data[gender].map(voice => voice.language))];
-            
-            // Create options
-            selectElement.innerHTML = '';
-            languages.forEach(language => {
-                const option = document.createElement('option');
-                option.value = language;
-                option.textContent = language.charAt(0).toUpperCase() + language.slice(1);
-                selectElement.appendChild(option);
-            });
-        }
-
-        // Initialize video generator form
-        function initVideoGeneratorForm() {
-            const form = document.getElementById('video-generator-form');
-            if (!form) return;
-            
-            const textInput = document.getElementById('text-input');
-            const voiceGender = document.getElementById('voice-gender');
-            const voiceLanguage = document.getElementById('voice-language');
-            const imageStyle = document.getElementById('image-style');
-            const bgMusic = document.getElementById('bg-music');
-            const generateBtn = document.getElementById('generate-video-btn');
-            const processingIndicator = document.getElementById('processing-indicator');
-            const videoPreview = document.getElementById('video-preview');
-            const videoControls = document.getElementById('video-controls');
-            const downloadBtn = document.getElementById('download-video');
-            const youtubeBtn = document.getElementById('export-youtube');
-            
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate form
-                let isValid = true;
-                
-                // Validate text input
-                if (!textInput.value.trim()) {
-                    showError(textInput, 'Please enter text content');
-                    isValid = false;
-                } else {
-                    clearError(textInput);
-                }
-                
-                // Validate voice gender
-                if (!voiceGender.value) {
-                    showError(voiceGender, 'Please select voice gender');
-                    isValid = false;
-                } else {
-                    clearError(voiceGender);
-                }
-                
-                // Validate voice language
-                if (!voiceLanguage.value) {
-                    showError(voiceLanguage, 'Please select voice language');
-                    isValid = false;
-                } else {
-                    clearError(voiceLanguage);
-                }
-                
-                // Validate image style
-                if (!imageStyle.value) {
-                    showError(imageStyle, 'Please select image style');
-                    isValid = false;
-                } else {
-                    clearError(imageStyle);
-                }
-                
-                if (isValid) {
-                    // Show processing indicator
-                    processingIndicator.classList.remove('hidden');
-                    generateBtn.disabled = true;
-                    
-                    // Prepare data for API call
-                    const formData = {
-                        text: textInput.value.trim(),
-                        voiceGender: voiceGender.value,
-                        voiceLanguage: voiceLanguage.value,
-                        imageStyle: imageStyle.value,
-                        bgMusic: bgMusic.value
-                    };
-                    
-                    // Call the API to generate video
-                    generateVideo(formData, videoPreview, videoControls, processingIndicator, generateBtn);
-                }
-            });
-            
-            // Handle download button
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', function() {
-                    // In a real application, this would download the actual video
-                    // For this demo, we'll create a dummy download link
-                    alert('Downloading your generated video as an MP4 file.');
-                    // In a real implementation, you would create a download link to the generated video
-                    // const downloadLink = document.createElement('a');
-                    // downloadLink.href = '/api/download-video?id=' + currentVideoId;
-                    // downloadLink.download = 'faithbeforefire-video.mp4';
-                    // downloadLink.click();
-                });
-            }
-            
-            // Handle YouTube export button
-            if (youtubeBtn) {
-                youtubeBtn.addEventListener('click', function() {
-                    // In a real application, this would integrate with YouTube API
-                    alert('Exporting your video to YouTube...');
-                    // In a real implementation, you would call an API endpoint to handle YouTube export
-                    // fetch('/api/export-to-youtube', {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ videoId: currentVideoId })
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     if (data.success) {
-                    //         alert('Video successfully exported to YouTube: ' + data.youtubeUrl);
-                    //     } else {
-                    //         alert('Error exporting to YouTube: ' + data.error);
-                    //     }
-                    // });
-                });
-            }
-        }
-
-        // Generate video using API
-        function generateVideo(formData, videoElement, controlsElement, processingIndicator, generateBtn) {
-            if (!videoElement || !controlsElement || !processingIndicator) return;
-            
-            // Call the API to generate video
-            fetch('/api/generate-video', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Show progress updates
-                    const progressSteps = [
-                        'Analyzing text...',
-                        'Generating images...',
-                        'Creating voiceover...',
-                        'Synchronizing audio and images...',
-                        'Finalizing video...',
-                        'Video ready!'
-                    ];
-                    
-                    const processingText = document.getElementById('processing-text');
-                    if (!processingText) return;
-                    
-                    let step = 0;
-                    const interval = setInterval(() => {
-                        processingText.textContent = progressSteps[step];
-                        step++;
-                        
-                        if (step >= progressSteps.length) {
-                            clearInterval(interval);
-                            
-                            // Hide processing indicator
-                            processingIndicator.classList.add('hidden');
-                            
-                            // Show video preview
-                            videoElement.classList.remove('hidden');
-                            videoElement.innerHTML = `
-                                <div class="video-placeholder">
-                                    <div class="video-placeholder-text">Video Preview</div>
-                                    <div class="video-placeholder-icon">▶</div>
-                                </div>
-                            `;
-                            
-                            // Show controls
-                            controlsElement.classList.remove('hidden');
-                            
-                            // Re-enable generate button
-                            generateBtn.disabled = false;
-                        }
-                    }, 1000);
-                } else {
-                    // Handle error
-                    processingIndicator.classList.add('hidden');
-                    generateBtn.disabled = false;
-                    alert('Error generating video: ' + (data.message || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error generating video:', error);
-                processingIndicator.classList.add('hidden');
-                generateBtn.disabled = false;
-                alert('Error generating video: ' + error.message);
-            });
-        }
-
-        // Show error message
-        function showError(input, message) {
-            const errorElement = document.getElementById(input.id + '-error');
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.classList.remove('hidden');
-            }
-            input.style.borderColor = '#e53935';
-        }
-
-        // Clear error message
-        function clearError(input) {
-            const errorElement = document.getElementById(input.id + '-error');
-            if (errorElement) {
-                errorElement.textContent = '';
-                errorElement.classList.add('hidden');
-            }
-            input.style.borderColor = '#ddd';
-        }
-    </script>
+    <div class="form-row" style="margin-top:1rem">
+      <div class="form-group form-group-half">
+        <label>Music Library (audio files)</label><input id="musicInput" type="file" accept="audio/*" multiple />
+      </div>
+      <div class="form-group form-group-half">
+        <label>Record Mode</label><select id="recordMode"><option value="internal">Internal</option><option value="tab">Tab Capture</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="form-container">
+    <div class="form-row">
+      <div class="form-group" style="flex:1">
+        <label>Script (one line = one scene)</label>
+        <textarea id="text-input" rows="8" style="width:100%">[char=John][mood=warm][cam=pan-left] A sunrise over misty mountains inspires us.
+[char=Mary][mood=cool][cam=dolly-zoom] Night rain over neon streets hums with motion.</textarea>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group form-group-half"><label>Resolution</label><select id="resSelect"><option>1280x720</option><option>1920x1080</option></select></div>
+      <div class="form-group form-group-half"><label>Parallax</label><input id="parallax" type="number" min="0" max="1" step="0.05" value="0.25"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group form-group-half"><label>WPM</label><input id="wpm" type="number" value="140"/></div>
+      <div class="form-group form-group-half"><label>Mood preference</label><select id="preferMood"><option value="">None</option><option value="warm">warm</option><option value="cool">cool</option><option value="anger">anger</option><option value="calm">calm</option></select></div>
+    </div>
+    <div class="stack">
+      <button class="btn" id="assignAutoStock">Assign Auto Stock</button>
+      <button class="btn" id="clearAutoStock">Clear Auto</button>
+      <span class="tag" id="durationTag">00:00</span>
+    </div>
+    <div style="margin-top:1rem">
+      <label>Per-line music & volume</label><div id="musicTable"></div>
+    </div>
+    <div class="stack" style="margin-top:10px">
+      <button class="btn" id="previewBtn">Preview</button>
+      <button class="btn" id="recordBtn">Record (WebM)</button>
+      <button class="btn" id="convertBtn">Convert to MP4</button>
+      <button class="btn" id="exportSrtBtn">Export SRT</button>
+      <button class="btn" id="thumbBtn">Generate Thumbnail</button>
+    </div>
+    <div class="stack" style="margin-top:6px">
+      <a id="downloadLink" class="btn" download="render.webm" style="display:none;background:#eee;color:#333">Download WebM</a>
+      <a id="mp4Link" class="btn" download="render.mp4" style="display:none;background:#eee;color:#333">Download MP4</a>
+      <a id="thumbLink" class="btn" download="thumbnail.png" style="display:none;background:#eee;color:#333">Download Thumbnail</a>
+    </div>
+  </div>
+  <div class="stage container" style="padding:0;margin-top:1rem"><canvas id="canvas" width="1280" height="720"></canvas></div>
+  <div class="form-container">
+    <h3 style="text-align:center">Upload to YouTube</h3>
+    <div class="form-row">
+      <div class="form-group form-group-half"><label>Google OAuth Client ID</label><input id="googleClientId" placeholder="your-client-id.apps.googleusercontent.com"/></div>
+      <div class="form-group form-group-half"><label>Privacy</label><select id="ytPrivacy"><option>private</option><option>unlisted</option><option>public</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group form-group-half"><label>Title</label><input id="ytTitle" placeholder="Video title"/></div>
+      <div class="form-group form-group-half"><label>Tags (comma-separated)</label><input id="ytTags" placeholder="tag1, tag2"/></div>
+    </div>
+    <div class="form-row"><div class="form-group" style="flex:1"><label>Description</label><textarea id="ytDesc" rows="4" style="width:100%"></textarea></div></div>
+    <div class="stack"><button id="googleSignIn" class="btn">Sign in</button><button id="ytUpload" class="btn">Upload MP4</button><span class="tag" id="ytStatus">Not signed in</span></div>
+  </div>
+</section>
+<footer class="container">&copy; 2025 Cinema Pro Ultra. All rights reserved.</footer>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/ffmpeg.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const $=id=>document.getElementById(id); const canvas=$('canvas'), ctx=canvas.getContext('2d'); function setCanvas(){ const [w,h]=$('resSelect').value.split('x').map(Number); canvas.width=w; canvas.height=h; } setCanvas();
+function wpm(){ return Math.max(80, parseInt($('wpm').value||'140',10)); }
+function autoDur(txt){ const words=(txt.match(/\b\w+\b/g)||[]).length; return Math.max(2, Math.ceil((words/wpm())*60)); }
+function parseScript(){ const lines=($('text-input').value||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean); const scenes=[]; for(const raw of lines){ const dur=raw.match(/\[\s*duration\s*=\s*(\d+(?:\.\d+)?)\s*\]/i); const bg=raw.match(/\[\s*bg\s*=\s*(#[0-9a-fA-F]{6})\s*\]/i); const cam=raw.match(/\[\s*cam\s*=\s*([^\]]+)\s*\]/i); const mood=raw.match(/\[\s*mood\s*=\s*([^\]]+)\s*\]/i); const ch=raw.match(/\[\s*char\s*=\s*([^\]]+)\s*\]/i); const textOnly=raw.replace(/\[[^\]]+\]/g,'').trim(); scenes.push({text:textOnly, duration:dur?parseFloat(dur[1]):autoDur(textOnly), bg:bg?bg[1]:'#0b1324', cam:(cam?cam[1].trim().toLowerCase():'pan-left'), mood:(mood?mood[1].trim().toLowerCase():'auto'), char:(ch?ch[1].trim():'')}); } return scenes; }
+function updateDurTag(scenes){ const t=scenes.reduce((a,s)=>a+s.duration,0); const mm=String((t/60)|0).padStart(2,'0'); const ss=String((t%60)|0).padStart(2,'0'); $('durationTag').textContent=mm+':'+ss; }
+const STOP=new Set("a,an,the,and,or,but,if,then,so,of,to,in,on,for,from,with,by,as,at,into,over,under,after,before,about,between,through,up,down,near,far,is,are,was,were,be,been,being,this,that,these,those,we,you,i,they,them,us,it,its,it's,our,your,their,me,my,your,his,her,our,their,not,no,yes,do,does,did".split(','));
+function toks(text){ return (text.toLowerCase().match(/[a-z][a-z]+/g)||[]).filter(w=>!STOP.has(w)); }
+function topKeywords(text,k=6){ const words=toks(text); const freq={}; words.forEach(w=>freq[w]=(freq[w]||0)+1); return Object.entries(freq).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,k); }
+function autoMood(text){ const lex={ warm:['sun','golden','sunset','sunrise','light','joy','love','glow'], cool:['night','blue','rain','cold','mist','quiet'], anger:['storm','fire','break','rage','war','wild'], calm:['calm','soft','gentle','breeze','cloud','peace'] }; const t=(text||'').toLowerCase(); const s={warm:0,cool:0,anger:0,calm:0}; for(const[k,ws] of Object.entries(lex)){ ws.forEach(w=>{ if(t.includes(w)) s[k]++; }); } let best='calm',mx=-1; for(const k of Object.keys(s)){ if(s[k]>mx){mx=s[k];best=k;} } return best; }
+const packDB={items:[],inv:{},avgLen:0}; const IMG_EXT=['.jpg','.jpeg','.png','.webp','.gif'], VID_EXT=['.mp4','.webm','.mov','.m4v'];
+const extOf=name=>{ const i=name.lastIndexOf('.'); return i>=0? name.slice(i).toLowerCase() : ''; }
+function resetIndex(){ packDB.items=[]; packDB.inv={}; packDB.avgLen=0; $('packStats').textContent='No pack indexed'; }
+function bm25(queryToks){ const N=packDB.items.length||1,k1=1.5,b=.75; const scores=new Map(); const uniq=[...new Set(queryToks)]; uniq.forEach(q=>{ const postings=packDB.inv[q]||[]; const df=postings.length||.5; const idf=Math.log((N-df+.5)/(df+.5)+1); postings.forEach(({id,tf})=>{ const dl=packDB.items[id].toks.length||1; const denom=tf+k1*(1-b+b*(dl/packDB.avgLen)); const score=idf*((tf*(k1+1))/denom); scores.set(id,(scores.get(id)||0)+score); }); }); return [...scores.entries()].sort((a,b)=>b[1]-a[1]).map(([id,score])=>({item:packDB.items[id],score})); }
+document.getElementById('indexPack').addEventListener('click', async ()=>{ const files=[...($('packInput').files||[])]; if(!files.length){ alert('Pick a folder first.'); return; } resetIndex(); const textMap=new Map(); for(const f of files){ if(f.name.toLowerCase().endsWith('.txt')) textMap.set(f.name.replace(/\.txt$/i,''), await f.text()); } let totalLen=0,count=0; for(const f of files){ const ex=extOf(f.name); if(!IMG_EXT.includes(ex)&&!VID_EXT.includes(ex)) continue; const base=f.name.replace(/\.[^/.]+$/,''); const nameTags=base.replace(/[_-]+/g,' ').toLowerCase(); const sidecar=textMap.get(base)||''; const allText=(nameTags+' '+sidecar).trim(); const tk=toks(allText); const id=packDB.items.length; packDB.items.push({id,file:f,name:f.name,text:allText,toks:tk,isVideo:VID_EXT.includes(ex)}); const seen={}; tk.forEach(w=>seen[w]=(seen[w]||0)+1); for(const [w,c] of Object.entries(seen)){ if(!packDB.inv[w]) packDB.inv[w]=[]; packDB.inv[w].push({id,tf:c}); } totalLen+=tk.length; count++; } packDB.avgLen=packDB.items.length?(totalLen/packDB.items.length):0; $('packStats').textContent=`Indexed ${count} assets`; });
+document.getElementById('importZip').addEventListener('click', async ()=>{ try{ const f=$('zipInput').files?.[0]; if(!f){ alert('Choose a .zip first.'); return; } if(!window.JSZip){ alert('JSZip failed to load.'); return; } resetIndex(); const zip=await JSZip.loadAsync(f); const entries=Object.values(zip.files).filter(e=>!e.dir); const textMap=new Map(); for(const e of entries){ if(e.name.toLowerCase().endsWith('.txt')){ const base=e.name.replace(/\.txt$/i,''); const txt=await e.async('text'); textMap.set(base,txt); } } let totalLen=0,count=0; for(const e of entries){ const ex=extOf(e.name); if(!IMG_EXT.includes(ex)&&!VID_EXT.includes(ex)) continue; const base=e.name.replace(/\.[^/.]+$/,''); const blob=await e.async('blob'); const file=new File([blob], e.name.split('/').pop(), { type: blob.type || (IMG_EXT.includes(ex)? 'image/*' : 'video/*') }); const nameTags=base.split('/').pop().replace(/[_-]+/g,' ').toLowerCase(); const sidecar=textMap.get(base)||''; const allText=(nameTags+' '+sidecar).trim(); const tk=toks(allText); const id=packDB.items.length; packDB.items.push({id,file,name:file.name,text:allText,toks:tk,isVideo:VID_EXT.includes(ex)}); const seen={}; tk.forEach(w=>seen[w]=(seen[w]||0)+1); for(const [w,c] of Object.entries(seen)){ if(!packDB.inv[w]) packDB.inv[w]=[]; packDB.inv[w].push({id,tf:c}); } totalLen+=tk.length; count++; } packDB.avgLen=packDB.items.length?(totalLen/packDB.items.length):0; $('packStats').textContent=`Indexed ${count} assets (zip)`; }catch(e){ alert('ZIP import failed: '+e.message); } });
+document.getElementById('exportZip').addEventListener('click', async ()=>{ if(!window.JSZip){ alert('JSZip failed to load.'); return; } if(!packDB.items.length){ alert('Index a folder/zip first.'); return; } const zip=new JSZip(); const media=zip.folder('media'); const tags=zip.folder('tags'); for(const item of packDB.items){ const arr=await item.file.arrayBuffer(); media.file(item.name, arr); const base=item.name.replace(/\.[^/.]+$/,''); tags.file(base+'.txt', (item.text||item.toks.join(' '))); } const blob=await zip.generateAsync({type:'blob'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='stock-pack.zip'; a.click(); });
+const autoBg={}, autoVid={}; async function fileToBitmap(file){ if(file._bmp) return file._bmp; const bmp=await createImageBitmap(file); file._bmp=bmp; return bmp; } function fileToVideo(file){ if(file._vid) return file._vid; const url=URL.createObjectURL(file); const v=document.createElement('video'); v.src=url; v.muted=true; v.loop=true; v.playsInline=true; file._vid=v; return v; }
+document.getElementById('assignAutoStock').addEventListener('click', async ()=>{ const scenes=parseScript(); if(!packDB.items.length){ alert('Index a folder or import a zip first.'); return; } for(let i=0;i<scenes.length;i++){ const s=scenes[i]; const mood=(s.mood==='auto')?autoMood(s.text):s.mood; const q=[...topKeywords(s.text,6)]; if(mood==='warm') q.push('sunset','sunrise','golden'); if(mood==='cool') q.push('night','blue','rain'); if(mood==='anger') q.push('storm','fire'); if(mood==='calm') q.push('calm','cloud'); const ranked=bm25(q); autoBg[i]=null; autoVid[i]=null; for(const r of ranked){ const it=r.item; if(!autoBg[i] && !it.isVideo){ autoBg[i]=await fileToBitmap(it.file); } if(!autoVid[i] && it.isVideo){ autoVid[i]=fileToVideo(it.file); } if(autoBg[i] && autoVid[i]) break; } } buildMusicTable(); updateDurTag(scenes); alert('AutoStock assigned.'); });
+document.getElementById('clearAutoStock').addEventListener('click', ()=>{ for(const k of Object.keys(autoBg)) delete autoBg[k]; for(const k of Object.keys(autoVid)) delete autoVid[k]; });
+const musicLib=[]; const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+document.getElementById('musicInput').addEventListener('change', async e=>{ const files=[...(e.target.files||[])]; for(const f of files){ const arr=await f.arrayBuffer(); const buf=await audioCtx.decodeAudioData(arr); const url=URL.createObjectURL(f); musicLib.push({name:f.name,file:f,url,buffer:buf}); } buildMusicTable(); });
+function buildMusicTable(){ const scenes=parseScript(); const table=document.createElement('table'); table.style.width='100%'; table.style.borderCollapse='collapse'; table.innerHTML='<thead><tr><th>#</th><th>Scene</th><th>Music</th><th>Vol</th></tr></thead>'; const tb=document.createElement('tbody'); scenes.forEach((s,i)=>{ const tr=document.createElement('tr'); tr.innerHTML='<td>'+String(i+1)+'</td>'; const td1=document.createElement('td'); td1.textContent=s.text.slice(0,80); tr.appendChild(td1); const td2=document.createElement('td'); const sel=document.createElement('select'); sel.id='musicSel_'+i; const none=document.createElement('option'); none.value=''; none.textContent='(None)'; sel.appendChild(none); for(const m of musicLib){ const opt=document.createElement('option'); opt.value=m.name; opt.textContent=m.name; sel.appendChild(opt); } td2.appendChild(sel); tr.appendChild(td2); const td3=document.createElement('td'); const vol=document.createElement('input'); vol.type='range'; vol.min='0'; vol.max='1'; vol.step='0.05'; vol.value='0.6'; vol.id='musicVol_'+i; td3.appendChild(vol); tr.appendChild(td3); tb.appendChild(tr); }); table.appendChild(tb); const mount=$('musicTable'); mount.innerHTML=''; mount.appendChild(table); }
+function scheduleMusicWithDuck(scenes, startAt=audioCtx.currentTime){ const nodes=[]; let t=startAt; for(let i=0;i<scenes.length;i++){ const s=scenes[i]; const sel=$('musicSel_'+i); const vol=$('musicVol_'+i); if(sel && sel.value){ const tr=musicLib.find(m=>m.name===sel.value); if(tr && tr.buffer){ const src=audioCtx.createBufferSource(); src.buffer=tr.buffer; const g=audioCtx.createGain(); const base=parseFloat(vol.value||'0.6'); g.gain.setValueAtTime(base, t); const duck=0.28; const atk=0.2, rel=0.25; g.gain.linearRampToValueAtTime(duck, t+atk); g.gain.setValueAtTime(duck, t + Math.max(0, s.duration - rel)); g.gain.linearRampToValueAtTime(base, t + s.duration); src.connect(g).connect(audioCtx.destination); src.start(t); src.stop(t + s.duration + 0.01); nodes.append if False else None; } } t += s.duration; } return nodes; }
+function cameraFor(cam,t,W,H){ const k=Math.max(0,Math.min(1,t)); switch(cam){ case 'pan-right':return{x:(k-0.5)*0.1*W,y:0,scale:1.03}; case 'pan-left':return{x:((0.5-k)*0.1)*W,y:0,scale:1.03}; case 'tilt-up':return{x:0,y:(0.5-k)*0.08*H,scale:1.02}; case 'tilt-down':return{x:0,y:(k-0.5)*0.08*H,scale:1.02}; case 'dolly-zoom':return{x:0,y:0,scale:1.02+0.06*Math.sin(k*Math.PI)}; default:return{x:0,y:0,scale:1}; } }
+function moodTint(m){ switch(m){ case 'warm': return 'rgba(255,160,60,0.18)'; case 'cool': return 'rgba(50,120,255,0.18)'; case 'anger': return 'rgba(255,60,60,0.18)'; case 'calm': return 'rgba(80,180,160,0.18)'; default: return 'rgba(0,0,0,0)'; } }
+function drawAvatar(char, speaking, x, y, scale=1){ if(!char) return; const initials = char.split(/\s+/).map(w=>w[0]?.toUpperCase()).join('').slice(0,2) || '?'; const r = 36*scale; const ctx2=canvas.getContext('2d'); ctx2.save(); ctx2.translate(x,y); ctx2.fillStyle='rgba(0,0,0,0.35)'; ctx2.beginPath(); ctx2.arc(0,0,r+8,0,Math.PI*2); ctx2.fill(); ctx2.fillStyle='#fef3c7'; ctx2.beginPath(); ctx2.arc(0,0,r,0,Math.PI*2); ctx2.fill(); ctx2.fillStyle='#111827'; ctx2.font=`700 ${Math.round(22*scale)}px system-ui`; ctx2.textAlign='center'; ctx2.textBaseline='middle'; ctx2.fillText(initials,0,-4*scale); ctx2.fillStyle='#111827'; const open = speaking ? 10*scale : 3*scale; ctx2.fillRect(-8*scale, 10*scale, 16*scale, open); ctx2.restore(); }
+function drawScene(scene, idx, tNorm){ const W=canvas.width,H=canvas.height; const cam=cameraFor(scene.cam,tNorm,W,H); const ctx2=canvas.getContext('2d'); ctx2.save(); ctx2.fillStyle=scene.bg||'#0b1324'; ctx2.fillRect(0,0,W,H); const bg=autoBg[idx]; if(bg){ const sc=Math.max(W/bg.width,H/bg.height)*cam.scale*1.05; const w=bg.width*sc,h=bg.height*sc; const x=(W-w)/2+cam.x*0.5,y=(H-h)/2+cam.y*0.5; ctx2.drawImage(bg,x,y,w,h); } const vid=autoVid[idx]; if(vid){ try{ if(vid.readyState>=2) vid.play().catch(()=>{}); const sc=Math.max(W/vid.videoWidth,H/vid.videoHeight)*1.02; const w=vid.videoWidth*sc,h=vid.videoHeight*sc; ctx2.globalAlpha=0.9; ctx2.drawImage(vid,(W-w)/2,(H-h)/2,w,h); ctx2.globalAlpha=1; }catch(e){} } const mood=(scene.mood==='auto')?autoMood(scene.text):scene.mood; ctx2.fillStyle=moodTint(mood); ctx2.fillRect(0,0,W,H); const speaking = Math.sin(tNorm*Math.PI*4) > 0; drawAvatar(scene.char, speaking, Math.round(W*0.1), Math.round(H*0.14), 1); const pad=Math.round(Math.min(W,H)*0.1); const text=scene.text; ctx2.textAlign='center'; ctx2.textBaseline='alphabetic'; ctx2.font='700 42px system-ui'; const words=(text||'').split(/\s+/); const lines=[]; let line=''; const maxW=W-pad*2; for(const w2 of words){ const test=(line?line+' ':'')+w2; if(ctx2.measureText(test).width<=maxW){ line=test; } else { if(line)lines.append if False else None; line=w2; } } if(line)lines.append if False else None; const lh=42*1.25,total=lh*lines.length,yStart=H-pad-total; ctx2.fillStyle='rgba(0,0,0,0.35)'; ctx2.fillRect(pad-16,yStart-16,W-(pad*2)+32,total+32); ctx2.fillStyle='#fff'; for(let i=0;i<lines.length;i++){ ctx2.fillText(lines[i], W/2, yStart+(i+1)*lh); } ctx2.restore(); }
+document.getElementById('previewBtn').addEventListener('click', async ()=>{ const scenes=parseScript(); setCanvas(); updateDurTag(scenes); let idx=0; for(const s of scenes){ const start=performance.now(); const dur=s.duration*1000; while(true){ const now=performance.now(); const k=Math.min(1,(now-start)/dur); drawScene(s,idx,k); if(k>=1) break; await new Promise(r=>requestAnimationFrame(r)); } idx++; } });
+let recordedBlob=null;
+document.getElementById('recordBtn').addEventListener('click', async ()=>{ const mode=$('recordMode').value; const scenes=parseScript(); setCanvas(); updateDurTag(scenes); scheduleMusicWithDuck(scenes, (new (window.AudioContext||window.webkitAudioContext)()).currentTime+0.2); let stream; if(mode==='internal'){ const v=canvas.captureStream(30); const audioCtx = new (window.AudioContext||window.webkitAudioContext)(); const a=audioCtx.destination.stream; stream=new MediaStream([...v.getVideoTracks(), ...a.getAudioTracks()]); } else { stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:true}); } const rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9,opus'}); const chunks=[]; rec.ondataavailable=e=>e.data.size&&chunks.push(e.data); rec.onstop=()=>{ recordedBlob=new Blob(chunks,{type:'video/webm'}); const a=$('downloadLink'); a.href=URL.createObjectURL(recordedBlob); a.style.display='inline-block'; alert('Recording complete. Convert to MP4 next.'); }; rec.start(); let idx=0; for(const s of scenes){ const start=performance.now(); const dur=s.duration*1000; while(true){ const now=performance.now(); const k=Math.min(1,(now-start)/dur); drawScene(s,idx,k); if(k>=1) break; await new Promise(r=>requestAnimationFrame(r)); } idx++; } rec.stop(); if(mode==='tab'){ stream.getTracks().forEach(t=>t.stop()); } });
+document.getElementById('convertBtn').addEventListener('click', async ()=>{ if(!recordedBlob){ alert('Record first.'); return; } const {createFFmpeg, fetchFile}=FFmpeg; const ff=createFFmpeg({log:true}); await ff.load(); ff.FS('writeFile','in.webm', await fetchFile(recordedBlob)); await ff.run('-i','in.webm','-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-b:a','192k','out.mp4'); const out=ff.FS('readFile','out.mp4'); const blob=new Blob([out.buffer],{type:'video/mp4'}); const a=$('mp4Link'); a.href=URL.createObjectURL(blob); a.style.display='inline-block'; window._lastMp4Blob=blob; alert('MP4 ready.'); });
+document.getElementById('exportSrtBtn').addEventListener('click', ()=>{ const scenes=parseScript(); let t=0,out=[]; const ts=s=>{ const ms=Math.round(s*1000); const hh=String(Math.floor(ms/3600000)).padStart(2,'0'); const mm=String(Math.floor((ms%3600000)/60000)).padStart(2,'0'); const ss=String(Math.floor((ms%60000)/1000)).padStart(2,'0'); const mmm=String(ms%1000).padStart(3,'0'); return `${hh}:${mm}:${ss},${mmm}`; }; scenes.forEach((s,i)=>{ out.push(String(i+1)); out.push(`${ts(t)} --> ${ts(t+s.duration)}`); out.push(s.text||''); out.push(''); t+=s.duration; }); const blob=new Blob([out.join('\n')],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='captions.srt'; a.click(); });
+document.getElementById('thumbBtn').addEventListener('click', ()=>{ const scenes=parseScript(); if(!scenes.length) return; drawScene(scenes[0],0,0.5); canvas.toBlob(b=>{ if(!b) return; const a=$('thumbLink'); a.href=URL.createObjectURL(b); a.style.display='inline-block'; }, 'image/png'); });
+let googleAccessToken=null;
+document.getElementById('googleSignIn').addEventListener('click', ()=>{ const clientId=$('googleClientId').value.trim(); if(!clientId){ alert('Enter your Google OAuth Client ID.'); return; } if(!window.google || !google.accounts || !google.accounts.oauth2){ alert('Google Identity script not loaded.'); return; } const tokenClient = google.accounts.oauth2.initTokenClient({ client_id: clientId, scope: 'https://www.googleapis.com/auth/youtube.upload', callback: (resp)=>{ if(resp && resp.access_token){ googleAccessToken=resp.access_token; $('ytStatus').textContent='Signed in'; $('ytStatus').style.background='#dcfce7'; $('ytStatus').style.color='#166534'; } else { alert('Sign-in failed'); } } }); tokenClient.requestAccessToken(); });
+document.getElementById('ytUpload').addEventListener('click', async ()=>{ try{ if(!window._lastMp4Blob){ alert('No MP4 found. Convert first.'); return; } if(!googleAccessToken){ alert('Sign in first.'); return; } const title=$('ytTitle').value || 'Cinema Pro Ultra Upload'; const desc=$('ytDesc').value || ''; const tags=($('ytTags').value||'').split(',').map(s=>s.trim()).filter(Boolean); const privacy=$('ytPrivacy').value || 'private'; const init=await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status',{ method:'POST', headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Length': window._lastMp4Blob.size,'X-Upload-Content-Type':'video/mp4'}, body:JSON.stringify({snippet:{title,description:desc,tags},status:{privacyStatus:privacy}}) }); if(!init.ok){ throw new Error('Init failed: '+await init.text()); } const uploadUrl=init.headers.get('Location'); if(!uploadUrl) throw new Error('No upload URL returned'); const up=await fetch(uploadUrl,{method:'PUT', headers:{'Content-Type':'video/mp4'}, body:window._lastMp4Blob}); if(!up.ok){ throw new Error('Upload failed: '+await up.text()); } $('ytStatus').textContent='Upload complete'; $('ytStatus').style.background='#dcfce7'; $('ytStatus').style.color='#166534'; alert('Upload complete!'); }catch(e){ $('ytStatus').textContent='Upload error'; $('ytStatus').style.background='#fee2e2'; $('ytStatus').style.color='#991b1b'; alert('YouTube upload error: '+e.message); } });
+(function init(){ const ctx2=canvas.getContext('2d'); ctx2.fillStyle='#0b1324'; ctx2.fillRect(0,0,canvas.width,canvas.height); ctx2.fillStyle='#fff'; ctx2.font='700 28px system-ui'; ctx2.textAlign='center'; ctx2.fillText('Cinema Pro Ultra — Ready', canvas.width/2, canvas.height/2); })();
+</script>
 </body>
 </html>
