@@ -1,10 +1,66 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TruthBeforeFire</title>
-<meta http-equiv="refresh" content="0; url=/tbf-studio/index.html"/>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TruthBeforeFire — Redirecting…</title>
+  <meta name="description" content="TruthBeforeFire Studio redirect." />
+
+  <!-- Instant redirect for browsers even if JS is blocked -->
+  <meta http-equiv="refresh" content="0; url=/tbf-studio/index.html" />
+  <link rel="canonical" href="/tbf-studio/index.html" />
+
+  <style>
+    :root {
+      --bg: #0b0d10; --card:#12161b; --border:#1f2630; --txt:#e9eef5; --muted:#9fb0c0; --accent:#7c4dff;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: linear-gradient(180deg,#0b0d10,#0f141a);
+      color: var(--txt);
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      display: grid; place-items: center;
+    }
+    .card {
+      width: min(720px, 92vw);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    h1 { margin: 0 0 6px; font-size: 28px; }
+    p.muted { color: var(--muted); margin: 6px 0 16px; }
+    a.btn {
+      display: inline-block; padding: 10px 16px; border-radius: 12px;
+      color: #0b0d10; background: linear-gradient(90deg, var(--accent), #00d4ff);
+      text-decoration: none; font-weight: 700;
+    }
+    .spinner {
+      width: 28px; height: 28px; border: 3px solid var(--border);
+      border-top-color: var(--accent); border-radius: 50%;
+      margin: 16px auto; animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <script>
+    // JavaScript redirect (faster on most browsers)
+    (function () {
+      var target = "/tbf-studio/index.html";
+      try { window.location.replace(target); }
+      catch (e) { window.location.href = target; }
+    })();
+  </script>
 </head>
 <body>
-<p>Redirecting to <a href="/tbf-studio/index.html">/tbf-studio/index.html</a> …</p>
-</body></html>
+  <main class="card" role="main">
+    <h1>Redirecting to TruthBeforeFire Studio…</h1>
+    <p class="muted">If nothing happens automatically, click the button below.</p>
+    <div class="spinner" aria-hidden="true"></div>
+    <p><a class="btn" href="/tbf-studio/index.html">Open Studio</a></p>
+  </main>
+</body>
+</html>
