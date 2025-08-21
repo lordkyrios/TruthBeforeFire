@@ -1,1 +1,170 @@
-placeholder
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TruthBeforeFire — Browser Studio</title>
+  <meta name="description" content="TruthBeforeFire: edit scenes, make SRT, record voiceover, and export MP4 — all in your browser.">
+  <link rel="stylesheet" href="styles.css" />
+  <script async defer src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+<header class="header">
+  <div class="container nav">
+    <div class="logo">🔥 TruthBeforeFire</div>
+    <nav class="menu">
+      <a href="#studio">Studio</a>
+      <a href="#export">Export</a>
+      <a href="#metadata">Metadata</a>
+      <a href="#upload">YouTube Upload</a>
+      <a href="#settings">Settings</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section id="studio" class="card">
+    <h1>Studio</h1>
+    <div class="grid two">
+      <div>
+        <label class="lbl">Script</label>
+        <textarea id="script" placeholder="One scene per line, or separate with blank lines."></textarea>
+        <div class="row">
+          <button id="btnSplit" class="btn">Split into Scenes</button>
+          <button id="btnAutoTime" class="btn ghost">Auto‑time Durations</button>
+          <button id="btnSRT" class="btn ghost">Export .srt</button>
+        </div>
+
+        <div class="row">
+          <label class="lbl">Voice</label>
+          <select id="voiceSelect"></select>
+          <button id="btnSpeak" class="btn ghost">Preview Voice</button>
+          <button id="btnStopSpeak" class="btn ghost">Stop</button>
+        </div>
+
+        <div class="row">
+          <button id="btnRec" class="btn">🎙️ Record Voice</button>
+          <button id="btnStopRec" class="btn ghost">Stop Rec</button>
+          <input type="file" id="voiceFile" accept="audio/*" />
+        </div>
+
+        <div class="row">
+          <label class="lbl">Background Music</label>
+          <input type="file" id="musicFile" accept="audio/*" />
+          <label class="inline">Music Volume <input type="range" id="musicVol" min="0" max="1" step="0.05" value="0.2"></label>
+        </div>
+
+        <div class="row">
+          <label class="lbl">Image(s)</label>
+          <input type="file" id="imageFiles" accept="image/*" multiple />
+          <span class="muted">First image will be used if multiple.</span>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Scenes</label>
+        <ol id="scenes" class="scenes"></ol>
+        <div class="muted">Timeline (est.): <span id="timeline"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="export" class="card">
+    <h2>Export MP4 (in browser)</h2>
+    <p class="muted">Uses FFmpeg.wasm to combine the first image + voice audio + optional music into a 1080p MP4 @30fps.</p>
+    <div class="row">
+      <button id="btnAssemble" class="btn">Assemble MP4</button>
+      <span id="ffmpegStatus" class="muted"></span>
+    </div>
+    <div id="downloadArea" class="row"></div>
+  </section>
+
+  <section id="metadata" class="card">
+    <h2>Metadata</h2>
+    <div class="grid two">
+      <div>
+        <label class="lbl">Title</label>
+        <input id="title" placeholder="Video title" />
+        <label class="lbl">Description</label>
+        <textarea id="description" rows="6" placeholder="YouTube description"></textarea>
+        <label class="lbl">Tags (comma‑separated)</label>
+        <input id="tags" placeholder="faith, bible, gospel" />
+        <div class="row">
+          <button id="btnSuggestMeta" class="btn ghost">Suggest from Script</button>
+          <button id="btnSaveMeta" class="btn ghost">Save</button>
+        </div>
+      </div>
+      <div class="card lite">
+        <h3>Plan Limits</h3>
+        <div class="row">
+          <label class="lbl">Plan</label>
+          <select id="plan">
+            <option>Free</option>
+            <option>Mini Test</option>
+            <option>Pro</option>
+            <option>Creator</option>
+            <option>Ultimate</option>
+          </select>
+        </div>
+        <ul class="bullets">
+          <li><b>Free</b>: 20s max</li>
+          <li><b>Mini Test</b>: 60s max (enter code)</li>
+          <li><b>Pro</b>: unlimited short</li>
+          <li><b>Creator</b>: full videos</li>
+          <li><b>Ultimate</b>: full + automation</li>
+        </ul>
+        <div class="row">
+          <input id="miniCode" placeholder="Mini unlock code" />
+          <button id="btnUnlockMini" class="btn ghost">Unlock</button>
+        </div>
+        <div class="row">
+          <input id="ownerEmail" placeholder="Owner email (override)" />
+          <button id="btnOwner" class="btn ghost">Owner Override</button>
+        </div>
+        <div class="muted">Durations enforced client‑side for demo; back‑end enforcement comes later.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="upload" class="card">
+    <h2>YouTube Upload (optional)</h2>
+    <p class="muted">Client‑side OAuth using Google's JS API. Requires your own <b>CLIENT_ID</b> and <b>API Key</b>. Configure in <code>settings</code> below.</p>
+    <div class="row">
+      <button id="btnGapiInit" class="btn ghost">Load Google API</button>
+      <button id="btnSignIn" class="btn">Sign in</button>
+      <button id="btnSignOut" class="btn ghost">Sign out</button>
+    </div>
+    <div class="row">
+      <label class="lbl">Select MP4</label>
+      <input type="file" id="uploadFile" accept="video/mp4" />
+      <button id="btnYTUpload" class="btn">Upload to YouTube</button>
+    </div>
+    <div id="uploadStatus" class="muted"></div>
+    <div id="confirmation" class="card lite hidden">
+      <h3>Uploaded</h3>
+      <p id="videoLink"></p>
+    </div>
+  </section>
+
+  <section id="settings" class="card">
+    <h2>Settings</h2>
+    <div class="grid two">
+      <div>
+        <label class="lbl">Google CLIENT_ID</label>
+        <input id="googleClientId" placeholder="xxxxxxxx.apps.googleusercontent.com" />
+        <label class="lbl">Google API Key</label>
+        <input id="googleApiKey" placeholder="AIza..." />
+        <button id="btnSaveSettings" class="btn">Save Settings</button>
+        <span id="saveMsg" class="muted"></span>
+      </div>
+      <div class="lite">
+        <p class="muted">Settings persist in your browser (localStorage). For OpenAI/Google TTS and Stripe, you'll add back‑end later.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">© 2025 TruthBeforeFire</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
